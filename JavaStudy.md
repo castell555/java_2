@@ -311,3 +311,71 @@ public class Book {
 
 ```
 ---
+## 4월 17일(7주차)
+### 객체 배열 선언과 생성 과정
+
+```java
+public class CricleA {
+    int radius;
+    public CricleA(int radius){
+        this.radius = radius;
+    }
+    void set(int radius){
+        this.radius = radius;
+    }
+    public static void main(String[] args) {
+        CricleA ob1 = new CricleA(1);
+        CricleA ob2 = new CricleA(2);
+        CricleA ob3 = new CricleA(3);
+
+        ob1.set(4);
+        ob2.set(5);
+        ob3.set(6);
+    }
+}
+```
+
+#### 1. 배열 레퍼런스 변수 언언
+#### 2. 레퍼런스 배열 생성
+#### 3. 배열의 각 원소 객체 생성
+```java
+Circle [] c;
+c = new Circle[5];
+
+for(int i =0; i<c.length; i++){
+    c[i] = new Circle(i);
+}
+for(int i=0; i<c.length; i++){
+    System.out.print((int)(c[i].getArea() + " "));
+}
+```
+### 객체 배열 만들기 연습
+```java
+import java.util.Scanner;
+class Book{
+    String title, author;
+    public Book(String title, String author){
+        this.title = title;
+        this.author = author;
+    }
+}
+public class BookArray {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Book [] book = new Book[2];
+
+        for(int i = 0; i<book.length; i++){
+            System.out.print("제목>> ");
+            String title = scanner.nextLine();
+            System.out.print("저자>> ");
+            String author = scanner.nextLine();
+            book[i] = new Book(title, author);
+        }
+        for(int i=0; i<book.length; i++)
+            System.out.print("(" + book[i].title + ", " + book[i].author + ")");
+    }
+}
+
+```
+---
