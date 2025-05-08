@@ -1,4 +1,226 @@
-# ● JAVA 수업---------------(202230318 윤준서) 
+# ● JAVA 수업---------------(202230318 윤준서)
+
+---
+## 5월 08일(10주차)
+### 추상 클래스
+* 추상 메소드
+    * abstract로 선언된 메소드, 메소드의 코드는 없고 원형만 선언
+```java
+abstract public String getName(); //추상 메소드
+abstract public String fail() {return "Good bye"}; //추상 메소드 아님, 컴파일 오류
+```
+* 추상 클래스
+    * 추상 메소드를 가지며, abstract로 선언된 클래스
+    * 추상 메소드 없이, abstract로 선언한 클래스
+
+* 추상 클래스는 온전한 클래스가 아니기 때문에 인스턴스를 생성할 수 없음
+```java
+JComponent p;
+p = new JComponent(); //컴파일 오류, 추상 클래스의 인스턴스 생성 불가
+```
+* 추상 클래스 상속
+    * 추상 클래스를 상속받으면 추상 클래스가 됨
+    * 서브 클래스도 abstract로 선언해야 함
+```java
+abstract class A{ //추상 클래스
+    abstract public int add(int x, int y); //추상 매소드
+}
+abstract class B{ //추상 클래스
+    public void show() {system.out.println("B")}
+}
+```
+
+* 추상 클래스 구현
+    * 서브 클래스에서 슈퍼 클래스의 추상 메소드 구현(오버라이딩)
+    * 추상 클래스를 구현한 서브 클래스는 추상 클래스 아님
+
+## 추상 클래스의 목적
+* 추상 클래스의 목적
+    * 상속을 위한 슈퍼 클래스로 활용하는 것
+    * 서브 클래스에서 추상 메소드 구현
+    * 다향성 실현
+
+* 추상 클래스 Calculator를 상속받는 GoodCalc 클래스를 구현하라
+```java
+abstract class Calculator{
+    public abstract int add(int a, int b);
+
+    public abstract int substract(int a, int b);
+
+    public abstract double average(int[] a);
+}
+
+
+
+public class GoodCalc extends Calculator{
+    @Override
+    public int add(int a, int b){ // 추상 메소드 구현
+        return a + b;
+    }
+
+    public int substract(int a, int b){ // 추상 메소드 구현
+        return a - b;
+    }
+
+    public double average(int[] a){ // 추상 메소드 구현
+        double sum=0;
+        for(int i=0; i<a.length i++)
+            sum += a[i];
+        return sum/a.length;
+    }
+
+    public static void main(String [] args){
+        GoodCalc c = new GoodCalc();
+        System.out.println(c.add(2,3));
+        System.out.println(c.substract(2,3));
+        System.out.println(c.average(new int [] (2,3,4)));
+    }
+}
+```
+## 자바의 인터페이스
+* 소프트웨어를 규격화된 모듈로 만들고, 인터페이스가 맞는 모듈을 조립하듯이 응용프로그램을 작성하기 위해서 사용
+* 자바의 인터페이스
+    * 클래스가 구현해야 할 메소드들이 선언되는 추상형
+
+```java
+인터페이스의 사례
+Interface PhoneInterface(){
+    int BUTTONS = 20; // 상수 필드 선언
+    void sendCall(); // 추상 메소드
+    void receiveCall(); // 추상 메소드
+}
+```
+## 인터페이스의 구성 요소들의 특징
+* 상수 : public만 혀용, public static final 생략
+* 추상 메소드 : public abstract 생략 가능
+* default 메소드 : 
+    * 인터페이스에 코드가 작성된 메소드
+    * 인터페이스를 구현하는 클래스에 자동 상속
+    * public 접근 지정만 허용, 생략 가능
+
+* pricate 메소드 : 
+    * 인터페이스 내에 메소드 코드가 작성되어야 함
+    * 인터페이스 내에 있는 다른 메소드에 의해서만 호출 가능
+* static 메소드 : public, pricate 모두 지정 가능. 생략하면 pubic
+
+* 인터페이스 간에 상속 가능
+    - 인터ㅔ이스를 상속하여 확장된 인터페이스 작성 가능
+    * extends 키워드로 상속 선언
+
+* 인터페이스 다중 상속 허용
+```java
+interface MoblicePhoneInterface extends PhoneInterface(){
+    void sendSNS();     // 추상 메소드 추가
+    void receiveSNS();  // 추상 메소드 추가
+}
+```
+* 인터페이스의 추상 메소드를 모두 구현한 클래스 작성
+    * implements 키워드 사용
+    * 여러 개의 인터페이스 동시 구현 가능
+
+* 인터페이스 구현 사례
+    * PhoneInterface 인터페이스 구현한 SamsungPhone 클래스
+```java
+class SamsungPhone implements PhoneInterface{
+    public void 
+}
+```
+```java
+interface PhoneInterface{
+    final int TIMEOUT = 10000;
+    void sendCall();
+    void receiveCall();
+}
+interface MobilePhoneInterface extends PhoneInterface{
+    void sendSMS();
+    void receiveSMS();
+}
+interface MP3Interface{
+    public void play();
+    public void stop();
+}
+class PDA{
+    public int calculate(int x, int y) {return x + y;}
+}
+
+class SmartPhone extends PDA implements MobilePhoneInterface, MP3Interface{
+    public void sendCall() {System.out.println("전화 걸기");}
+    public void receiveCall() {System.out.println("전화 받기");}
+    public void sendSMS() {System.out.println("SMS 보내기");}
+    public void receiveSMS() {System.out.println("SMS 받기");}
+
+    public void play(){System.out.println("음악 재생");}
+    public void stop() {System.out.println("재생 중지");}
+
+    public void schedule() {System.out.println("일정 관리");}
+}
+public class InterfaceEX{
+    public static void main(String [] args){
+        SmartPhone p = new SmartPhone();
+        p.sendCall();
+        p.play();
+        System.out.println(p.calculate(3, 5));
+        p.schedule();
+    }
+}
+```
+# 6.1 패키지
+* 패키지(package)
+    * 서로 관련된 클래스와 인터페이스를 컴파일한 클래스 파일들을 묶어 놓은 디렉터리
+    * 하나의 응용프로그램은 한 개 이상의 패키지로 작성
+    * 패키지는 jar 파일로 압축할 수 있음
+
+* 모듈(module)
+    * 여러 패키지와 이미지 등의 자원을 모아 놓은 컨테이너
+    * 하나의 모듈을 하나의 .jmod 파일에 저장
+
+* Java 9부터 모듈화 도입
+    * 플랫폼의 모듈화 : Java 9부터 자바 API의 모든 클래스들(자바 실행 환경)을 패키지 기반에서 모듈들로 완전히 재구성
+    * 응용프로그램의 모듈화 : 클래스들은 패키지로 만들고, 다시 패키지를 모듈로 만듦, 모듈 프로그래밍은 어렵고 복잡
+
+* 모듈화의 목적
+    * java 9부터 자바 API를 여러 모듈(99개)로 분활 : java 8까지는 rt.jar의 한 파일에 모든 API 저장. 현재 70개로 정리됨
+    * 응용프로그램이 실행할 때 꼭 필요한 모듈들로만 실행 환경 구축 : 메모리 자원이 열약한 작은 소형 기기에 꼭 필요한 모듈로 구성된 작은 크기의 실행 이미지를 만들기 위함
+
+* 모듈의 현실
+* java 9부터 전면적으로 도입
+* 복잡한 개념
+* 큰 자바 응용프로그램에는 개발, 유지보수 등에 적합
+* 모듈화 작업은 매우 중요한 개념이며, 소규모 프로젝트부터 적용해야 대형 프로젝트 쉡게 도입, 활용할 수 있음
+
+---
+
+* 다른 패키지에 작성된 클래스 사용
+    * import를 이용하지 않는 경우
+    * 소스에 클래스 이름의 완전 경로명 사용
+
+* 필요한 클래스만 import
+    * 소스 시작 부분에 클래스의 경로명 import
+    * import 패키지.클래스
+    * 소스에는 클래스 명만 명시하면 됨
+
+* 패키지 전체를 import
+    * 소스 싲가 부분에 패키지의 경로명.* import
+    * import 패키지.*
+    * 소스에는 클래스 명만 명시하면 됨
+    * import java.util.*;
+---
+* 클래스 파일이 저장되는 위치는
+    * 클래스나 인터페이스가 컴파일 되면 클래스 파일 생성
+    * 클래스 파일은 패키지로 선언된 디렉터리에 저장
+
+* 패키지 선언
+    * 소스 파일의 맨 앞에 컴파일 후 저장된 패키지 지정 -> 패키지명;
+---
+### 디폴트 패키지
+* package 선언문이 없는 자바 소스 파일의 경우
+    * 컴파일러는 클래스나 인터페이스를 디폴트 패키지에 소속시킴
+    * 디폴트 패키지 -> 현재 디렉터리
+---
+### 패키지의 운영 방법
+* 패키지 이름은 도메인 기반으로 시작 형식 : com.회사이름.프로젝트명.기능명 -> 충돌 방지(전 세계 어디서든 유일한 패키지명 확보 가능) / 모듈별 분리 가능
+* 기능/역할별로 하위 패키지를 구분
+## 5월 1일(9주차-시험)
 ---
 ## 4월 18일(8주차)
 
