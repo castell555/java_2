@@ -1,5 +1,223 @@
 # ● JAVA 수업---------------(202230318 윤준서)
+---
+## 5월 15일(11주차)
+### package의 운영 방법
+* 패키지 이름은 도메일 기반으로 시작 형식 : com.회사이름.프로젝트명.기능명 -> 충돌 방지(전 세계 어디서든 유일한 패키지명 확보 가능) / 모듈별 분리 가능
+* 기능/역할별로 하위 패키지를 구분 : utils. controller, service 등
+* 디렉토리 구조와 package 선언을 정확히 일치해야 합니다.
+* import는 필요한 만큼만, * 전체 import는 피하는 것이 좋습니다.<br/>
 
+### 모듈 개념
+* java 9에서 도입된 개념
+* 패키지와 이미지 등의 리소스를 담은 컨테이너
+* 모듈 파일(.jmod)로 저장
+
+## 자바 플랫폼의 모듈화
+* 자바 플랫폼
+    * 자바의 개발 환경(JDK)과 자바의 실행 환경(JRE)를 지칭. java se(자바 api) 포함.
+    * 자바 API의 모든 클래스가 여러 개의 모듈로 재구성됨
+    * 모듈 파일은 JDK의 jmods 디렉터리에 저장하여 배포
+* 모듈 파일로부터 모듈을 푸는 명령
+    * jmod extract "C:\Program Files\Java\jdk-17.0.3.+7\jmods\java.base.jmod"
+
+## 자바 모듈화의 목적
+* 자바 컴포넌트들을 필요에 따라 조립하여 사용하기 위함
+* 컴퓨터 시스템의 불필요한 부담 감소
+    * 세일한 모듈화를 토앻 필요 없는 모듈이 로드되지 않게 함
+    * 소형 IoT 장치에도 자바 응용프로그램이 실행되고 성능을 유지하게 함
+
+## Object 클래스
+* 모든 자바 클래스는 반드시 Object를 상속받도록 자동 컴파일
+* 모든 클래스의 수퍼 클래스
+* 모든 클래스가 상속받는 공통 메소드 포함
+
+```java
+Object 클래스로 객체의 속성 알아내기
+
+class Point{
+    int x, y;
+    public Point(int x, int y){
+        this.x = x; this.y = y;
+    }
+}
+public class ObjectPropertyEx{
+    public static void main(String [] args){
+        Point p = new Point(2,3);
+        System.out.println(p.getClass().getName());
+        System.out.println(p.hashCode());
+        System.out.println(p.toString());
+    }
+}
+```
+## toString() 메소드, 객체를 문자열로 변환
+* 각 클래스는 toString()을 오버라이딩하여 자신만의 문자열 리턴 가능
+    * 객체를 문자열로 반환
+    * 원형 : public String toString();
+
+* 컴파일러에 의한 toString() 자동 변환
+    * 객체 + 문자열 -> 객체.toString() + 문자열로 자동 변환
+    * 객체를 단독으로 사용 하는 경우 -> 객체.toString()으로 자동 변환
+
+```java
+point 클래스에 toString() 작성
+
+class Point{
+    private int x,y;
+    public Point(int x, int y){
+        this.x = x; this.y = y;
+    }
+    public String toString(){
+        return "Point(" + x + "," + y + ")";
+    }
+}
+public class ToStringEx {
+    public static void main(String[] args) {
+        Point a = new Point(2,3);
+        System.out.println(a.toString());
+        System.out.println(a);
+    }
+}
+```
+```java
+Point 클래스의 equals() 작성
+
+class Point3{
+    int x, y;
+    public Point3(int x, int y){
+        this.x = x; this.y = y;
+    }
+    public boolean equals(Object obj){
+        Point3 p = (Point3)obj; //obj를 Point 타입으로 다운 캐스팅
+        if(x == p.x && y == p.y) return true;
+        else return false;
+    }
+}
+public class EqualsEx{
+    public static void main(String[] args){
+        Point3 a = new Point3(2,3);
+        Point3 b = new Point3(2,3);
+        Point3 c = new Point3(3,4);
+        if(a == b) System.out.println("a==b");
+        if(a.equals(b)) System.out.println("a is equals to b");
+        if(a.equals(c)) System.out.println("a is equals to c");
+    }
+}
+```
+```java
+class Rect{
+    int width, height;
+
+    public Rect(int width, int height){
+        this.width = width;
+        this.height = height;
+    }
+    public boolean equals(Object obj){
+        if(!(obj instanceof Rect)) return false;
+        Rect p = (Rect) obj;
+        reutnr this.width * this.height == p.width * p.height;
+    }
+}
+
+public class Ex64RectEx{
+    public static void main(String[] args){
+        Rect a = new Rect(2, 3);
+        Rect b = new Rect(3, 2);
+        Rect c = new Rect(3, 4);
+
+        if(a.equals(b))
+            System.out.println("a is equals to b");
+        if(a.equals(c))
+            System.out.println("a is equals to c");
+        if(b.equals(c))
+            System.out.println("b is equals to c");
+    }
+}
+```
+
+## Wrapper 클래스
+* wrapper 클래스 : 자바의 기본 타입을 클래스화 한 8개 클래스를 통칭
+* 용도 : 객체만 사용할 수 있는 컬렉션 등에 기본 타입의 값을 사용하기 위해 Wrapper 객체로 만들어 사용
+* 객체를 생성하기 위해선 .valueOf()를 사용
+
+```java
+Wrapper 객체로부터 기본 타입 값 알아내기
+
+Integer i = integer.valueOf(10);
+int ii = i.intvalue();
+```
+
+```java
+문자열을 기본 데이터 타입으로 변환
+
+int i = integer.parseint("123");
+boolean b = Boolean.parseBoolean("true");
+double f = Double.parseDouble("3.14");
+```
+
+## 박싱과 언박싱
+* 박싱(boxing) : 기본 타입의 값을 Wrapper 객체로 변환하는 것
+* 언박싱(unboxing) : Wrapper 객체에 들어 있는 기본 타입의 값을 빼내는 것. 박싱의 반대
+```java
+Integer ten = Integer.valueOf(10); //박싱
+int n = ten.intValue(); //언박싱
+```
+
+* 자동 박싱과 자동 언박싱 : JDK1.5부터 박싱과 언박싱은 자동으로 이루어지도록 컴파일됨
+```java
+Integer ten = 10; //자동 박싱
+int n = ten; //자동 언박싱
+```
+
+## String 생성과 특징
+* String 클래스는 문자열을 나타냄
+* 스트링 리터럴(문자열 리터럴)은 String 객체로 처리됨
+* 스트링 객체의 생성 사례
+```java
+String str1 = "abcd"; //대문자이므로 클래스
+char data[] = {'a', 'b', 'c', 'd'};
+String str2 = new String(data);
+String str3 = new String("abcd"); //str2와 str3는 모두 "abcd" 스트링
+```
+
+### 스트링 리터럴과 new String()
+* 스트링 리터럴
+    * 자바 가상 기계 내부에서 리터럴 테이블에 저장되고 관리됨
+    * 응용프로그램에서 공유됨
+    * 스트링 리터럴 사례) String s = "Hello";
+
+* new String()으로 생성된 스트링
+    * 스트링 객체는 힙에 생성
+    * 스트링은 공유되지 않음
+
+### String 활용
+* 스트링 비교, equals()와 compareTo()
+    * 스트링 비교에 == 연산자 절대 사용 금지
+    * equals() : 스트링이 같으면 true, 아니면 false 리턴
+```java
+String java = "java";
+if(java.equals("Java")) //True
+```
+
+* int compareTo(String anotherString)
+    * 문자열이 같으면 0 리턴
+    * 이 문자열이 anotherString 보다 먼저 나오면 음수 리턴
+    * 이 문자열이 anotherString 보다 나중에 나오면 양수 리턴
+```java
+String java = "Java";
+String cpp = "C++";
+int res = java.compareTo(cpp);
+if(res == 0) System.out.println("the same");
+else if(res < 0) System.out.println(java + " < " + cpp);
+else System.out.println(java + " > " + cpp);
+```
+
+### String 활용
+* 공백 제거, String trim()
+* 키보드나 파일로부터 스트링을 입력받을 때, 스트링 앞뒤에 공백이 끼는 경우, trim()을 사용해 스트링 앞뒤에 있는 공백 문자를 제거한 스트링 리턴
+
+```java
+예제 6-6
+```
 ---
 ## 5월 08일(10주차)
 ### 추상 클래스
