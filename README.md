@@ -1,5 +1,327 @@
 # ● JAVA 수업---------------(202230318 윤준서)
 ---
+## 5월 22일(12주차)
+### StringBuffer 클래스
+* 가변 스트링을 다루는 클래스
+* StringBuffer 객체 생성
+* String 클래스와 달리 문자열 변경 가능
+    * 가변크기의 버퍼를 가지고 있어 문자열 수정 가능
+    * 문자열의 수정이 많은 작업에 적합
+
+* 스트링 조작 사례
+```java
+StringBuffer sb = new StringBuffer("This");
+
+sb.append(" is pencil.");   // sb = "This is pencil."
+sb.insert(7, " my");        // sb = "This is my pencil."
+sb.replace(8, 10, "your");  // sb = "This is your pencil."
+system.out.println(sb);     // "This is your pencil." 출력
+```
+
+### StringTokenizer 클래스
+* 구분 문자를 기준으로 문자열을 분리하는 클래스
+    * 구분 문자(delimiter) : 문자열을 구분할 때 사용되는 문자
+    * 토큰(token) : 구분 문자로 분리된 문자열
+    * 카운트 토큰(counttoken) : 토큰의 개수 리턴
+
+* 예) ㄱ
+    ```java
+    String query = "name=kitae&addr=seoul&age=21";
+    StringTokenizer st = new StringTokenizer(query, "&");
+    ```
+```java
+//예제 6-7
+import java.util.StringTokenizer;
+public class StringTokenizerEx{
+    public static void main(String[] args){
+        String query = "name=kitae&addr=seoul&age=21";
+        StringTokenizer st = new StringTokenizer(query, "&");
+
+        int n = st.countTokens();                 //분리된 토큰 개수
+        System.out.println("토큰 개수 = " + n); //
+        while(st.hasMoreTokens()){
+            String token = st.nextToken();
+            System.out.println(token);
+        }
+    }
+}
+```
+### Math 클래스
+* 기본 산술 연산 메소드를 제공하는 클래스
+* 모든 메소드는 static으로 선언
+    * 클래스 이름으로 호출 가능
+
+* Math.random() 메소드로 난수 발행
+    * random()은 0보다 크거나 같고 1.0보다 작은 실수 난수 발생
+    * 1에서 100까지의 랜덤 정수 10개를 발생시키는 코드 사례
+    ```java
+    for(int x=0; x<10; x++){
+        int n = (int)(Math.random()*100 + 1); // 1~100의 랜덤 정수 발생
+        System.out.println(n);
+    }
+    ```
+* java.util.Random 클래스를 이용하여 난수 발생 가능
+    ```java
+    Random r = new Random();
+    int n = r.nextInt();        // 음수, 양수, 0을 포함하여 자ㅏㅂ의 정수 범위의 난수 발생
+    int m = r.nextInt(100);     // 0에서 99사이(0과 99포함)의 정수 난수 발생
+    ```
+```java
+//예제 6-8
+public class MathEx{
+    public static void main(String[] args){
+        System.out.println(Math.abs(-3.14)); // 절댓값 구하가ㅣ
+        System.out.println(Math.sqrt(9.0));  // 제곱근
+        System.out.println(Math.exp(2));     // e의 2승
+        System.out.println(Math.round(3.14));// 반올림
+
+        //[1, 45] 사이의 정수형 난수 5개 발생
+        System.out.println("이번 주 행운의 번호는 ");
+        for(int i=0; i<5; i++)
+            System.out.print((int)(Math.random()*45 + 1) + " "); //난수 발생
+    }
+}
+```
+---
+# 7장
+## 컬랙션
+### 컬랙션의 개념
+* 요소(elment)라고 불리는 가변 개수의 객체들의 저장소
+    * 객체들의 컨테이너라고도 불림
+    * 요소의 개수에 따라 크기 자동 조절
+    * 요소의 삽입, 삭제에 따른 요소의 위치 자동 이동
+
+* 고정 크기의 배열을 다루는 어려움 해소
+* 다양한 객체들의 삽입, 삭제 검색 등의 관리 용이
+
+### 컬랙션 특징
+1. 컬랙션은 제네릭(generics) 기법으로 구현
+* 제너릭
+    * 특정 타입만 다루지 않고, 여러 종류의 타입으로 변신할 수 있도록 클래스나 메소드를 일반화 시키는 기법
+    * 클래스나 인터페이스 이름에 <E>, <K>, <V> 등 타입 매개변수 포함
+* 제네릭 컬랙션 사례 : 백터 Vector<E>
+    - <E>에서 E에 구체적인 타입을 주어 구체적인 타입만 다루는 백터로 활용
+    - 점수만 다루는 컬랙션 백터 Vector(Integer)
+    - 문자열만 다루는 컬렉션 백터 Vector<String>
+
+2. 컬랙션의 요소는 객체만 가능
+* int, char, double 등의 기본 타입으로 구체화 불가
+* 컬렉션 사례
+    ```java
+    Vector<int> v = new Vector<int>();          // 컴파일 오류, int 사용 불가
+    Vector<Integer> v = new Vector<Integer>();  // 정상 코드
+    ```
+
+### 제네릭의 기본 개념
+* 제네릭
+    * JDK 1.5부터 도입
+    * 모든 종류의 데이터 타입을 다룰 수 있도록 일반화된 타입 매개 변수로 클래스(인터페이스)나 메소드를 작성하는 기법
+    * C++의 탬플릿(Template)과 동일
+
+
+
+
+### Vector<E>의 특성
+* <E>에서 사용할 요소의 특징 타입으로 구체화
+* 배열을 가변 크기로 다룰 수 있게 하는 컨테이너
+    * 배열의 길이 제한 극복
+    * 요소의 개수가 넘치면 자동으로 길이 조절
+
+* 요소 객체들을 삽입, 삭제, 검색하는 컨테이너
+    * 삽입, 삭제에 따라 자동으로 요소의 위치 조정
+
+* Vector에 삽입 가능한 것
+    * 객체, null
+    * 기본 타입의 값은 Wrapper 객체로 만들어 저장
+
+* Vector에 객체 삽입
+    * 백터의 맨 뒤, 중간에 객체 사입 가능
+
+* Vector에서 객체 삭제
+    * 임의의 위치에 있는 객체 삭제 가능
+
+
+
+
+### Vector<Integer> 백터 컬렉션 내부
+* add를 사용해 요소를 삽입하고 get()을 이용하여 요소를 검색
+```java
+Vector<Integer> v = new Vector<Integer>(7); // 초기 용량이 7인 벡터 생성
+```
+
+
+
+### 컬렉션 생성문의 진화 : Java 7, Java 10
+* Java 7 이전
+    ```java
+    Vector<Integer> v = new Vector<Integer>();
+    ```
+* java 7 이후
+    * 컴파일러의 타입 추론 기능 추가
+    * <>(다이아몬드 연산자)에 타입 매개변수 생략
+    ```java
+    Vector<Integer> v = new Vector<>();
+    ```
+* Java 10 이후
+    * var 키워드 도입, 컴파일러의 지역 변수 타입 추론 가능
+    ```java
+    var v = new Vector<Integer>();
+    ```
+
+
+### point 클래스만 다루는 Vector<Point> 컬렉션 활용
+```java
+// 예제 7-2
+import java.util.Vector;
+
+class Point{
+    private int x, y;
+    public Point(int x, int y){
+        public 
+    }
+}
+```
+
+### ArrayList<E>
+* 가변 크기 배열을 구현한 클래스
+    * <E>에 요소로 사용할 특정 타입으로 구체화
+
+* 백터와 거의 동일
+    * 요소 삽입, 갖게, 검색 등 벡터 기능과 거의 동일함
+    * 벡터와 달리 스레드 동기화 기능 없음
+    * 다수 스레드가 동시에 ArrayList에 잡근할 때 동기화되지 않음
+    * 개발자가 스레드 동기화 코드 작성
+
+
+### ArrayList와 Vector의 차이
+* ArrayList와 Vector는 모두 동적으로 크기가 늘어나는 배열 기반의 리스트 클래스입니다.
+* ArrayList와 Vector 비교 요약
+동기화 여부 : 비도익화 | 동기화
+성능 : 빠름 | 느림
+기본 크기 증가 : 1.5배씩 증가 | 2배씩 증가
+
+
+* 요즘은 ArrayList가 기본 선택지입니다.
+* Vector는 이제 거의 사용하지 않고, 멀티 스레드가 필요한면 다른 방법을 씁니다
+
+
+
+### 컬렉션의 순차 검색을 위한 Iterator
+* Interator<E> 인터페이스
+    * 리스트 구조의 컬렉션에서 요소의 순차 검색을 위한 인터페이스
+    * Vector<E>, ArrayList<E>, LinkedList<E>가 상속받는 인터페이스
+
+* Iterator 객체 얻어내기
+    * 컬렉션의 iterator() 메소드 호출 : 해당 컬렉션을 순차 검색할 수 있는 iterator 객체 리턴
+    ```java
+    Vector<Integer> v = new Vector<Integer>();
+    Iterator<Integer> it = v.iterator();
+    ```
+
+    * 컬렉션 검색 코드
+    ```java
+    while(it.hasNext()){
+        int n = it.next();
+        ....
+    }
+    ```
+
+
+```java
+//예제 7-4
+
+```
+
+
+### HashMap<K, V>
+* 키와 값의 쌍으로 구성되는 요소를 다루는 컬렉션
+    * K : 키로 사용할 요소의 타입
+    * V : 값으로 사용할 요소의 타입
+    * 키와 값이 한 쌍으로 삽입
+    * 값을 검색하기 위해서는 반드시 키 이용
+
+* 삽입 및 검색어 빠른 특징
+    * 요소 삽입 : put() 메소드
+    * 요소 검색 : get() 메소드
+
+
+```java
+//예제 7-5
+import java.util.*;
+public class HashMappDicEx{
+    public static void main(String[] args){
+        HashMap<String, String> dic = new HashMap<String, String>();
+
+        dic.put("baby", "아기");
+        dic.put("love", "사랑");
+        dic.put("apple", "사과");
+
+        Set<String> keys = dic.keySet();
+        Iterator<String> it = keys.iterator();
+        while(it.hasNext()){
+            String key = it.next();
+            String value = dic.get(key);
+            System.out.print("(" + key + "," + value + ")");
+        }
+        System.out.println();
+
+        Scanner scanner = new Scanner(System.in);
+        for(int i=0; i<3; i++){
+            System.out.print("찾고 싶은 단어는 ?");
+            String eng = scanner.next();
+            String kor = dic.get(eng);
+            if(kor == null) System.out.println(eng + "는 없는 단어입니다.");
+            else System.out.println(kor);
+        }
+    }
+}
+
+```
+
+
+
+### 제네릭 만들기
+* 제네릭 클래스 작성 : 클래스 이름 옆에 일반화된 타입 매개 변수 추가
+```java
+public class MyClass(T){
+    T val:
+    void set(T a){
+        val = a;
+    }
+    T get(){
+        return val;
+    }
+}
+```
+
+# 8장
+### 자바의 GUI
+* GUI : 사용자가 편리하게 입출력 할 수 있도록 그래픽으로 화면을 구성하고, 마우스나 키보드로 입력 받을 수 있도록 지원하는 사용자 인터페이스
+* 자바 언어에서 GUI 응용프로그램 작성 : AWT와 Swing 패키지에 강력한 GUI 컴포넌트 제공.
+
+[AWT(Abstract windowing Toolkit) 패키지]
+* 자바가 처음 나왔을 때부터 배포된 GUI 패키지, 최근에는 거의 사용하지 않음
+* AWT 컴포넌트는 중량 컴포넌트(heavy weight component)
+* AWT 컴포넌트의 그리기는 운영체제에 의해 이루어지며, 운영체제에 자원을 많이 소모하고 부담을 줌
+* 운영체제가 직접 그리기 때문에 속도는 빠름
+
+
+
+### 자바의 GUI Swing 패키지
+* AWT 기술을 기반으로 작성된 자바 라이브러리
+* 모든 AWT 기능 + 추가된 풍부하고 화려한 고급 컴포넌트
+* AWT컴포넌트를 모두 스윙으로 재작성.
+* AWT 컴포넌트 이름 앞에 J자를 덧붙임
+* 순수 자바 언어로 구현
+* 스윙 컴포넌트는 경량 컴포넌트
+* 스윙 컴포넌트는 운영체제의 도움을 받지 않고, 직접 그리기 때문에 운영체제에 부담을 주지 안음
+* 현재 자바의 GUI 표준으로 사용됨
+
+
+
+
+
+---
 ## 5월 15일(11주차)
 ### package의 운영 방법
 * 패키지 이름은 도메일 기반으로 시작 형식 : com.회사이름.프로젝트명.기능명 -> 충돌 방지(전 세계 어디서든 유일한 패키지명 확보 가능) / 모듈별 분리 가능
@@ -145,6 +467,7 @@ Wrapper 객체로부터 기본 타입 값 알아내기
 Integer i = integer.valueOf(10);
 int ii = i.intvalue();
 ```
+
 
 ```java
 문자열을 기본 데이터 타입으로 변환
