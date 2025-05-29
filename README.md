@@ -1,5 +1,334 @@
 # ● JAVA 수업---------------(202230318 윤준서)
 ---
+## 5월 29일(13주차)
+* 컨테이너
+    * 다른 컴포넌트를 포할할 수 있는 GUI 컴포넌트 : java.awt.Container를 상속받음
+    * 다른 컨테이너에 포함될 수 있음
+    * AWM 컨테이너 : Panel, Frame, Applet, Dialog, Window
+    * Swing 컨테이너 : JPanel, JFrame, JApplet, JDialog, JWindow
+
+* 컴포넌트
+    * 컨테이너에 포함되어야 화면에 출력될 수 있는 GUI 객체
+    * 다른 컴포넌트를 포함할 수 없는 순수 컴포넌트
+    * 모든 GUI 컴포넌트가 상속받는 클래스 : java.awt.Component
+    * 스윙 컴포넌트가 상속받는 클래스 : javax.swing.Jcomponent
+
+* 최상위 컨테이너
+    * 다른 컨테이너에 포함되지 않고도 화면에 출력되며, 독립적으로 존재 가능한 컨테이너
+    * 스스로 화면에 자신을 출력하는 컨테이너 : JFrame, JDialog, JApplet
+
+```java
+import javax.swing.JFrame;
+
+public class Ex81MyFrame extends JFrame{
+    public Ex81MyFrame(){
+        setTitel("300x300 스윙 프레임 만들기");
+        setSize(300, 300);
+        setVisible(true);
+    }
+    public static void main(String[] args){
+        Ex81MyFrame frame = new Ex81MyFrame();
+    }
+}
+```
+### Swing 응용프로그램에서 main()의 기능과 위치
+* 스윙 응용프로그램에서 main()의 기능 최소화 바람직
+    * 스윙 응용프로그램이 실행되는 시작점으로서의 기능만
+    * 스윙 프레임을 생성하는 정도의 코드로 최소화
+    ```java
+    public static void main(String[] args){
+        MyFrame frame = new MyFrame();
+    }
+    ```
+* Frame 객체를 생성하고 사용하지 않기 때문에 worrying이 발생합니다.
+
+### 프레임에 컴포넌트 붙이기
+* 타이틀 달기
+    * super()나 setTitle() 이용
+
+* 컨텐트팬에 컴포넌트 달기
+    * 컨텐트팬이란? 스윙 컴포넌트들이 부착되는 공간
+    * 컨텐트팬 알아내기 : 스위 프레임에 붙은 디폴트 컨탠트팬 알아내기
+    * 컨텐트팬에 컴포넌트 붙이기
+    * 컨텐트팬 변경
+
+### 컨텐트팬에 대한 JDK 1.5 이후의 추가 사항
+* 1.5 이전
+    * 프레임의 컨텐트팬을 알아내어, 반드시 컨텐트팬에 컴포넌트 부착
+
+* JDK 1.5 이후 추가된 사항
+    * 프레임에 컴포넌트를 부착하면 프레임이 대신 컨텐트팬에 부착
+
+* 저자의 결론
+    * JDK 1.5이전처럼 직접 컨텐트팬에 컴포넌트를 부착하는 것이 바람직함
+    * 컨텐트팬 다루기 능력 필요하기 때문
+    * 컴포넌트의 부모가 프레임이 아닌, 컨텐트팬임을 알고 명확히 사용할 필요
+
+* 1.5이후 추가된 기능을 사용하는 것이 가독성이 좋으며, Content Pane을 다루는 능력이 반드시 필요한 것은 아닙니다.
+
+```java
+// 3개의 버튼 컴포넌트를 가진 스윙 프레임 만들기
+// 예제 8-2
+import javax.swing.*;
+import java.awt.*;
+
+public class ContentPaneEx extends JFrame{
+    ContentPaneEx(){
+        setTitle("ContentPane과 JFrame 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Container contentPane = getContentPane();
+        contentPane.setBackground(Color.ORANGE);
+        contentPane.setLayout(new FlowLayout());
+
+        contentPane.add(new JButton("OK"));
+        contentPane.add(new JButton("Cancel"));
+        contentPane.add(new JButton("Ignore"));
+
+        setSize(300, 150);
+        setVisible(true);
+    }
+    public static void main(String[] args){
+        new ContentPaneEx();
+    }
+}
+```
+### Swing 응용 프로그램의 종료
+* 응용프로그램 내에서 스스로 종료하는 방법
+    * 언제 어디서나 무조건 종료 System.exit(0);
+
+* 프레임의 오른쪽 상단의 종료버튼(X)이 클릭되면 어떤 일이 일어나는가?
+    * 프레임 종료, 프레임 윈도우를 닫음 : 프레임이 화면에서 보이지 않게 됨
+
+* 프레임이 보이지 않게 되지만 응용프로그램이 종료한 것 아님
+    * 키보드나 마우스 입력을 받지 못함
+    * 다시 setVisible(true)를 호출하면, 보이게 되고 이전 처럼 작동함
+
+* 프레임 종료버튼이 클릭될 때, 프레임과 함께 프로그램을 종료 시키는 방법
+    * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+### 컨테이너와 배치, 배치관리자 개념
+* 컨테이너의 배치관리자
+    * 컨테이너마다 하나의 배치관리자 존재
+    * 컨테이너 마다
+
+### 배치 관리자 대표 유형 4가지
+* FlowLayout 배치관리자
+    * 컴포넌트가 삽입되는 순서대로 왼쪽에서 오른쪽으로 배치
+    * 배치할 공간이 없으면 아래로 내려와서 반복한다
+
+* BorderLayout 배치관리자
+    * 컨테이너의 공간을 동,서,남,북,중앙의 5개 영역으로 나눔
+    * 5개 영역 중 응용프로그램에서 지정한 영역에 컴포넌트 배치
+
+* GridLayout 배치관리자
+    * 격자형태로 맞춰서 배치
+
+* CardLayout 배치관리자
+    * 일렬로 배치
+
+### 컨테이너와 디폴트 배치관리자
+* 컨테이너의 디폴트 배치관리자 : 컨테이너 생성시 자동으로 생성되는 배치관리자
+
+### 컨테이너에 새로운 배치관리자 설정
+* setLayout 메소드 호출 : lm을 새로운 배치관리자로 설정
+
+[사례]
+* JPanel 컨테이너에 BorderLayout 배치관리자를 설정하는 예
+    ```java
+    JPanel p = new JPanel();
+    p.setLayout(new BorderLayout());
+    ```
+
+* 컨텐트팬의 배치관리자를 FlowLayout 배치관리자로 설정
+    ```java
+    Container c = frame.getConentPane();
+    c.setLayout(new FlowLayout());
+    ```
+
+* 오류
+    ```java
+    c.setLayout(FlewLayout);
+    ```
+
+```java
+// FlowLayout 배치관리자 활용
+// 예제 8-3
+import javax.swing.*;
+import java.awt.*;
+
+public class FlowLayoutEx extends JFrame{
+    FlowLayoutEx(){
+        setTitle("FlowLayout 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container contentPane = getContentPane();
+
+        contentPane.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 40));
+
+        contentPane.add(new JButton("add"));
+        contentPane.add(new JButton("sub"));
+        contentPane.add(new JButton("mul"));
+        contentPane.add(new JButton("div"));
+        contentPane.add(new JButton("Calculate"));
+
+        setSize(300, 200);
+        setVisible(true);
+    }
+    public static void main(String[] args) {
+        new FlowLayoutEx();
+    }
+}
+```
+
+### BorderLayout 배치관리자
+* 배치방법
+    * 컨테이너 공간을 5 구역으로 분활, 배치 : 동, 서, 남, 북, 중앙
+
+### BorderLayout 생성자와 add() 메소드
+* 생산자
+    * BorderLayout()
+    * BorderLayout(hGap, vGap)
+
+### GridLayout 배치관리자
+* 배치방법
+    * GridLayout()
+    * GridLayout(int raws, int cols)
+    * GirdLayout(int rows, int cols, int hGap, int vGap)
+    * rows : 격자의 행수
+    * cals : 격자의 열수
+    * hGap : 수평 간격, 픽셀 단위
+
+
+### 배치관리자 없는 컨테이너
+* 배치관리자가 없는 컨테이너가 필요한 경우
+    - 응용프로그램에서 직접 컴포넌트의 크기와 위치를 결정하고자 하는 경우
+    1. 컴포넌트의 크기나 위치를 개발자 임의로 결정하고자 하는 경우
+    2. 게임 프로그램과 같이 시간이나 마우스/키보드의 입력에 따라 컴포넌트들의 위치와 크기가 수시로 변하는 경우
+    3. 여러 컴포넌트들이 서로 겹쳐 출력하고자 하는 경우
+
+* 컨테이너의 배치 관리자 제거 방법
+    * container.setLayout(null);
+
+* 컨테이너의 배치관리자가 없어지면, 컴포넌트에 대한 어떤 배치도 없음
+
+
+### 컴포넌트의 절대 위치와 크기 설정
+* 배치관리자에 없는 컨테이너에 컴포넌트를 삽입할 때
+    * 프로그램에서 컴포넌트의 절대 크기와 위치 설정
+    * 컴포넌트들이 서로 겹치게 할 수 있음
+
+```java
+// 배치관리자 없는 컨테이너에 컴포넌트를 절대 위치와 절대 크기로 지정
+// 예제 8-6
+
+```
+
+
+---
+
+
+
+
+
+# 9장
+### 이벤트 기반 프로그래밍
+* 이벤트 기반 프로그래밍
+    * 이벤트의 발생에 의해 프로그램 흐름이 결정되는 방식
+        * 이벤트가 발생하면 이벤트를 처맇는 루틴 실행
+        * 실행될 코드는 이벤트의 발생에 의해 전적으로 결정
+
+    * 반대되는 개념 : 배치 실행
+        - 프로그램의 개발자가 프로그램의 흐름을 결정하는 방식
+
+    * 이벤트 종류
+        * 사용자의 입력 : 마우스 드래그, 마우스 클릭...
+        * 센서로부터의 입력, 네트워크로부터 데이터 송수신
+        * 다른 응용프로그램이나 다른 스레드로부터의 메세지
+
+* 이벤트 기반 응용 프로그램의 구조
+    * 각 이벤트마다 처리하느 리스너 코드 보유
+
+* GUI 응용프로그램은 이벤트 기반 프로그래밍으로 작성됨
+    * GUI 라이브러리 종류 : C++의 MFC, C# GUI, Visual Basic, X window, Android 등
+    * 자바의 AWT와 Swing
+
+---
+
+### 이벤트 처리 과정
+1. 이벤트 발생
+2. 이벤트 객체 생성
+3. 응용프로그램에 작성된 이벤트 리스너 찾기
+4. 이벤트 리스너 실행
+
+---
+
+### 이벤트 객체
+* 이벤트 객체
+    * 발생한 이벤트에 관한 정보를 가진 객체
+    * 이벤트 리스너에 전달됨
+        * : 이벤트 리스너 코드가 발생한 이벤트에 대한 상황을 파악할 수 있게 함
+
+* 이벤트 객체가 포함하는 정보
+    * 이벤트 종류와 이벤트 소스
+    * 이벤트가 발생한 화면 좌표 및 컴포넌트 내 좌표
+    * 이벤트가 밸생한 버튼이나 메뉴 아이템의 문자열
+    * 클릭된 마우스 버튼 번호 및 마우스의 클릭 횟수
+    * 키의 코드 값과 문자 값
+    * 체크박스, 라디오버튼 등과 같은 컴포넌트에 이벤트가 발생하였다면 체크 상태
+
+* 이벤트 소스를 알아 내는 메소드 : Object getSource()
+    * 발생한 이벤트의 소스 컴포넌트 리턴
+    * Object 타입으로 리턴하므로 캐스팅하여 사용
+    * 모든 이벤트 객체에 대해 적용
+---
+
+### 리스너 인터페이스
+* 리스너 인터페이스 : 이벤트를 처리하는 자바 프로그램 코드, 클래스로 작성
+* 자바는 다양한 리스너 인테페이스 제공
+* 사용자의 이벤트 리스너 작성
+    * 자바의 리스너 인터페이스를 상속받아 구현
+
+---
+
+### 이벤트 리스너 작성 과제 사례
+1. 이벤트와 이벤트 리스너 선택
+    * 버튼 클릭을 처리하고자 하는 경우
+    * 이벤트 : Action 이벤트, 이벤트 리스너 : ActionListener
+
+2. 이벤트 리스너 클래스 작성 : ActionListner 인터페이스 구현
+    ```java
+    class MyActionListener implements ActionListener{
+        public void actionPerformed(ActionEvent e){ // 버튼이 클릭될 때 호출되는 메소드
+            JButton b = (JButton)e.getSource(); // 사용자가 클릭한 버튼 알아내기
+            if(b.getText().equals("Action")) // 버튼의 현재 문자열이 "Action"인지 비교
+                b.setText("액션"); // JButton의 setText()을 호출하여 문자열 변경
+            else
+                b.set.Text("Action"); // JButton의 setText()를 호출하여 문자열 변경
+        }
+    }
+    ```
+
+3. 이벤트 리스너 등록
+    * 이벤트를 받아 처리하고자 하는 컴포넌트에 이벤트 리스너 등록
+    * component.addxxxListener(listener);
+---
+
+### 이벤트 리스너 작성 방법
+* 독립 클래스로 작성
+    * 이벤트 리스너를 완전한 클래스로 작성
+    * 이벤트 리스너를 여러 곳에서 사용할 때 적합
+
+* 내부 클래스로 작성
+    * 클래스 안에 멤버처럼 클래스 작성
+    * 이벤트 리스너를 특정 클래스에서만 사용할 때 적합
+
+* 익명 클래스(anonymous class)로 작성
+    * 클래스의 이름 없이 간단히 리스너 작성
+    * 클래스 조차 만들 필요 없이 리스너 코드가 간단한 경우에 적합
+
+
+
+
 ## 5월 22일(12주차)
 ### StringBuffer 클래스
 * 가변 스트링을 다루는 클래스
